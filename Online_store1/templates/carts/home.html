@@ -1,0 +1,104 @@
+{% extends "base/base.html" %}
+
+
+
+{% block content %}
+
+	<h1>Cart</h1>
+
+	{% if cart.items.exists %}
+
+		<table class="table cart-table">
+		  <thead>
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">Product</th>
+		      <th scope="col">Quantity</th>
+		      <th scope="col">Price</th>
+		    </tr>
+		  </thead>
+		  <tbody class='cart-body'>
+		  	{% for item in cart.items.all %}
+			    <tr class='cart-product'>
+			      <th scope="row">{{ forloop.counter }}</th>
+
+			      <td>
+			      	<div class='row'>
+				      	<div class='col-sm-4'>
+					      	<a href='{{ item.product.get_absolute_url }}'>
+						      	{% if item.product.image %}
+									<img class="img-fluid" src='{{ item.product.image.url }}' alt="Card image cap">
+								{% else %}
+									<img class="img-fluid" src="http://placehold.it/200x100" alt="">
+								{% endif %}
+							</a>
+						</div>
+						<div class='col'>
+					      	<a href='{{ item.product.get_absolute_url }}'>
+					      		<h5>{{ item.product.title }}</h5>
+						    </a>
+					      	{% include 'carts/snippets/cart_remove.html' with product=item.product cart=cart %}
+					    </div>
+					</div>
+			      </td>
+
+			      <td>
+			      	{{ item.quantity }}
+			      </td>
+
+			      <td>
+			      	{{ item.product.price }}
+			      </td>
+			    </tr>
+		    {% endfor %}
+
+		    <tr>
+		      <td colspan="2"></td>
+
+		      <td>
+		      	<b>Subtotal</b>
+		      </td>
+
+		      <td>
+		      	$<span class='cart-subtotal'>{{ cart.subtotal }}</span>
+		      </td>
+		    </tr>
+		    <tr>
+		      <td colspan="2"></td>
+
+		      <td>
+		      	<b>Total</b>
+		      </td>
+
+		      <td>
+		      	$<span class='cart-total'>{{ cart.total }}</span>
+		      </td>
+		    </tr>
+		  </tbody>
+		</table>
+
+		<div class='container'>
+			<div class='row bg-dark py-2 fixed-bottom'>
+				<div class='col-md-4 px-5 offset-md-8'>
+					<a class='btn btn-lg btn-success btn-block' href='{% url "cart:checkout" %}'>Checkout</a>
+				</div>
+			</div>
+		</div>
+		
+
+	{% else %}
+
+		<br/>
+		<p class='lead text-center'>Cart is empty</p>
+
+		<div class='container'>
+			<div class='row py-2'>
+				<div class='col-md-4 mx-auto'>
+					<a class='btn btn-lg btn-primary btn-block' href='{% url "products:list" %}'>Start shopping!</a>
+				</div>
+			</div>
+		</div>
+
+	{% endif %}
+
+{% endblock %}

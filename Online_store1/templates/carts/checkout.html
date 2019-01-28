@@ -1,0 +1,187 @@
+{% extends "base/base.html" %}
+
+
+{% block content %}
+<!-- {{ object.order_id }} -- {{ object.cart }} -->
+
+	{% if not billing_profile %}
+
+		<div class='row'>
+			<div class='col-12 col-md-6'>
+				<h3>Login</h3>
+				<br/>
+
+				{% include 'accounts/snippets/form.html' with form=login_form next_url=request.build_absolute_uri %}
+
+				<br/>
+				<br/>
+			</div>
+			<div class='col-12 col-md-6'>
+				<h3>Continue as guest</h3>
+				<br/>
+
+				{% url "accounts:guest_register" as guest_register_url %}
+				{% include 'accounts/snippets/form.html' with form=guest_form next_url=request.build_absolute_uri action_url=guest_register_url %}
+
+				<br/>
+				<br/>
+			</div>
+		</div>
+
+	{% else %}
+
+		{% if not object.shipping_address %}
+
+			<div class='row'>
+				<div class='col-12'>
+					<p class='lead'>Shipping Address</p>
+					<hr/>
+				</div>
+
+				<div class='col-lg-6'>
+					{% url "addresses:checkout_address_create" as checkout_address_create %}
+					{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri action_url=checkout_address_create address_type='shipping' %}
+				</div>
+			</div>
+
+		{% elif not object.billing_address %}
+
+			<div class='row'>
+				<div class='col-12'>
+					<p class='lead'>Billing Address</p>
+					<hr/>
+				</div>
+
+				<div class='col-lg-6'>
+					{% url "addresses:checkout_address_create" as checkout_address_create %}
+					{% include 'addresses/form.html' with form=address_form next_url=request.build_absolute_uri action_url=checkout_address_create address_type='billing' %}
+				</div>
+			</div>
+
+
+		{% else %}
+
+			<!-- <h1>Finalize Checkout</h1>
+			<br/>
+
+			<h4>Cart Items</h4>
+
+			<table class="table cart-table">
+				<thead>
+				    <tr>
+				      <th scope="col">#</th>
+				      <th scope="col">Product</th>
+				      <th scope="col">Quantity</th>
+				      <th scope="col">Price</th>
+				    </tr>
+				</thead>
+				<tbody class='cart-body'>
+					{% for product in object.cart.products.all %}
+						<tr class='cart-product'>
+					      <th scope="row">{{ forloop.counter }}</th>
+
+					      <td>
+					      	<a href='{{ product.get_absolute_url }}'>
+					      		<h5>{{ product.title }}</h5>
+						    </a>
+					      </td>
+
+					      <td>
+					      	1
+					      </td>
+
+					      <td>
+					      	{{ product.price }}
+					      </td>
+					    </tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<br/>
+
+			<h4>Shipping Address:</h4>
+			<p>{{ object.shipping_address.get_address }}</p>
+			<h4>Billing Address:</h4>
+			<p>{{ object.billing_address.get_address }}</p>
+
+			<p><b>Cart Total:</b> ${{ object.cart.total }}</p>
+			<p><b>Shipping Total:</b> ${{ object.shipping_total }}</p>
+			<p><b>Order Total:</b> ${{ object.total }}</p>
+
+			
+
+			<div class='container'>
+				<div class='row bg-dark py-2 fixed-bottom'>
+					<div class='col-md-5 px-5 offset-md-7'>
+						<form class='form' method='POST' action=""> {% csrf_token %}
+							<button type='submit' class='btn btn-lg btn-success btn-block'>Checkout</button>
+						</form>
+					</div>
+				</div>
+			</div> -->
+
+
+			<h1>Finalize Checkout</h1>
+			<br/>
+
+			<h4>Cart Items</h4>
+
+			<table class="table cart-table">
+				<thead>
+				    <tr>
+				      <th scope="col">#</th>
+				      <th scope="col">Product</th>
+				      <th scope="col">Quantity</th>
+				      <th scope="col">Price</th>
+				    </tr>
+				</thead>
+				<tbody class='cart-body'>
+					{% for item in object.cart.items.all %}
+						<tr class='cart-product'>
+					      <th scope="row">{{ forloop.counter }}</th>
+
+					      <td>
+					      	<a href='{{ item.product.get_absolute_url }}'>
+					      		<h5>{{ item.product.title }}</h5>
+						    </a>
+					      </td>
+
+					      <td>
+					      	{{ item.quantity }}
+					      </td>
+
+					      <td>
+					      	{{ item.product.price }}
+					      </td>
+					    </tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<br/>
+
+			<h4>Shipping Address:</h4>
+			<p>{{ object.shipping_address.get_address }}</p>
+			<h4>Billing Address:</h4>
+			<p>{{ object.billing_address.get_address }}</p>
+
+			<p><b>Cart Total:</b> ${{ object.cart.total }}</p>
+			<p><b>Shipping Total:</b> ${{ object.shipping_total }}</p>
+			<p><b>Order Total:</b> ${{ object.total }}</p>
+
+			
+
+			<div class='container'>
+				<div class='row bg-dark py-2 fixed-bottom'>
+					<div class='col-md-5 px-5 offset-md-7'>
+						<form class='form' method='POST' action=""> {% csrf_token %}
+							<button type='submit' class='btn btn-lg btn-success btn-block'>Checkout</button>
+						</form>
+					</div>
+				</div>
+			</div>
+
+		{% endif %}
+
+	{% endif %}
+
+{% endblock %}

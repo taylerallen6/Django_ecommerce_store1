@@ -1,0 +1,10 @@
+<form class='form-product-ajax' method='POST' action='{% url "cart:remove" %}' data-endpoint='{% url "cart:remove" %}' class="form"> {% csrf_token %}
+
+	<input type='hidden' name='product_id' value='{{ product.id }}' />
+	<!-- My personal code: -->
+	<input type="hidden" name="next" value="{{ request.path }}">
+
+		<span class='submit-span'>
+			<button type='submit' class='btn btn-link'>Remove?</button>
+		</span>
+</form>

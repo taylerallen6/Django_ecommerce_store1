@@ -1,0 +1,20 @@
+
+<div class="card h-100">
+	<a href="{{ instance.get_absolute_url }}">
+		{% if instance.image %}
+			<img class="card-img-top" src='{{ instance.image.url }}' alt="Card image cap">
+		{% else %}
+			<img class="card-img-top" src="http://placehold.it/700x400" alt="">
+		{% endif %}
+	</a>
+	<div class="card-body">
+		<h4 class="card-title">
+			<a href="{{ instance.get_absolute_url }}">{{ instance.title }}</a>
+		</h4>
+		<h5>${{ instance.price }}</h5>
+		<p class="card-text">{{ instance.description|truncatewords:10 }}</p>
+	</div>
+	<div class="card-footer">
+		{% include 'carts/snippets/cart_add.html' with product=instance cart=cart %}
+	</div>
+</div>

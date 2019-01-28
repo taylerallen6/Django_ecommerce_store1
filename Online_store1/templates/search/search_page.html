@@ -1,0 +1,25 @@
+{% extends "base/base.html" %}
+
+
+{% block title %}
+	Home
+{% endblock %}
+
+{% block content %}
+
+	<h1>{{ title }}</h1>
+
+	{% if query %}
+		Results for <b>{{ query }}</b>
+		<hr/>
+	{% endif %}
+
+	{% for obj in object_list %}
+
+		{% include 'products/snippets/product_card.html' with instance=obj %} <br/>
+
+	{% endfor %}
+
+{% endblock %}
+
+
